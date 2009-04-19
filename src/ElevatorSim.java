@@ -8,9 +8,10 @@ public class ElevatorSim extends PApplet {
 
 	PFont pixelFont;
 	// PApplet p = super.;
+	Building building;
 	Door door;
 
-	ArrayList drawables = new ArrayList();
+	
 	int now;
 	int then;
 	float fps;
@@ -20,13 +21,12 @@ public class ElevatorSim extends PApplet {
 		pixelFont = loadFont("Monaco-9.vlw");
 		textFont(pixelFont);
 
-		door = new Door(this);
-		door.setX(65.0f);
-		door.setY(75.0f);
-		door.setHeight(50.0f);
-		door.setWidth(50.0f);
-
-		drawables.add(door);
+		building = new Building(this, 3, 2);		
+		
+		for (int i=0; i < building.doors.length; i++) {
+			AnimationManager.getInstance().add(building.doors[i]);
+		}
+		
 	}
 
 	public void draw() {
@@ -55,6 +55,7 @@ public class ElevatorSim extends PApplet {
 			elapsed = (float) (1.0 / 12.0);
 
 		ArrayList toRemove = new ArrayList();
+		ArrayList drawables = AnimationManager.getInstance().drawables;
 		for (Iterator iterator = drawables.iterator(); iterator.hasNext();) {
 			Drawable d = (Drawable) iterator.next();
 			//System.out.println(d.isDone());
@@ -76,12 +77,10 @@ public class ElevatorSim extends PApplet {
 
 	public void keyPressed() {
 		if (key == ' ') {
-			door.operateDoors();
-			DoorAnimation doorAnimation = new DoorAnimation(this, (int) door
-					.getX(), (int) door.getY(), (int) door.getWidth(),
-					(int) door.getHeight(), 0);
-			doorAnimation.start();
-			drawables.add(doorAnimation);
+			for(int i=0; i < building.doors.length; i++) {
+				Door door = building.doors[i];
+				door.operateDoors();
+			}
 		}
 	}
 
