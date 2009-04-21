@@ -53,23 +53,34 @@ public class Door implements Drawable {
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		state = OPENED;
+		state = CLOSED;
+		
+		// this is a dummy thing because initial state is closed
 		doorAnimation = new DoorAnimation(p, (int) x, (int) y, (int) width,
 				(int) height, 1);
+		
+		// initially, there is no animation so set to done as a hack
+		doorAnimation.done = true;
 	}
 
 	public void draw() {
 		p.rectMode(p.CORNER);
 		p.noFill();
 		p.stroke(0);
-		p.rect(x - width / 2, y - height / 2, width, height);
-		//p.translate(x - width / 2, y - height, 1);
-		//p.box(width);
-		
-		//p.translate(0, 0);
+		//p.rect(x - width / 2, y - height / 2, width, height);
+		p.pushMatrix();
+		p.translate(x, y);
+		p.beginShape(p.QUADS);
+			p.vertex(-width/2, -height/2, 0);
+			p.vertex(width/2, -height/2, 0);
+			p.vertex(width/2, height/2, 0);
+			p.vertex(-width/2, height/2, 0);
+		p.endShape();
+		p.popMatrix();
 
 		Util.nesText(p, x, y - 20, state);
 
+		// only draw static door if door is closed and animation is done 
 		if (!state.equals(OPENED) && doorAnimation.isDone()) {
 			p.fill(255);
 			p.stroke(0);
@@ -91,7 +102,7 @@ public class Door implements Drawable {
 					(int) height, 0);
 		}
 		doorAnimation.start();
-		AnimationManager.getInstance().add(doorAnimation);
+		DrawingManager.getInstance().add(doorAnimation);
 	}
 
 	public boolean isDone() {

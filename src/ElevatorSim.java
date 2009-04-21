@@ -9,7 +9,6 @@ public class ElevatorSim extends PApplet {
 	PFont pixelFont;
 	// PApplet p = super.;
 	Building building;
-	Door door;
 
 	int now;
 	int then;
@@ -23,14 +22,16 @@ public class ElevatorSim extends PApplet {
 
 		building = new Building(this, 3, 2);
 
+		// add elevator doors on every floor across every shaft to drawlist
 		for (int i = 0; i < building.doors.length; i++) {
 			for (int j=0; j < building.doors[i].length; j++) {
-				AnimationManager.getInstance().add(building.doors[i][j]);	
+				DrawingManager.getInstance().add(building.doors[i][j]);	
 			}
 		}
 
+		// add cars to drawlist
 		for (int i = 0; i < building.cars.length; i++) {
-			AnimationManager.getInstance().add(building.cars[i]);
+			DrawingManager.getInstance().add(building.cars[i]);
 		}
 
 	}
@@ -40,7 +41,6 @@ public class ElevatorSim extends PApplet {
 
 		// note how much time has passed since our last loop
 		then = now;
-
 		float elapsed = 0;
 
 		// wait for at least 1/100th of a second to pass
@@ -61,7 +61,7 @@ public class ElevatorSim extends PApplet {
 			elapsed = (float) (1.0 / 12.0);
 
 		ArrayList toRemove = new ArrayList();
-		ArrayList drawables = AnimationManager.getInstance().drawables;
+		ArrayList drawables = DrawingManager.getInstance().gameObjects;
 		for (Iterator iterator = drawables.iterator(); iterator.hasNext();) {
 			Drawable d = (Drawable) iterator.next();
 			// System.out.println(d.isDone());
@@ -82,12 +82,12 @@ public class ElevatorSim extends PApplet {
 	}
 
 	public void keyPressed() {
-		// if (key == ' ') {
-		// for(int i=0; i < building.doors.length; i++) {
-		// Door door = building.doors[i];
-		// door.operateDoors();
-		// }
-		// }
+		 if (key == ' ') {
+			 for(int i=0; i < building.cars.length; i++) {
+				 Car car = building.cars[i];
+				 car.operate();
+			 }
+		 }
 	}
 
 	public void mousePressed() {

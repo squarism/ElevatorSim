@@ -39,7 +39,7 @@ public class Building {
 		
 		for (int shaft=0; shaft < shafts; shaft++) {
 			System.out.println(shaft);
-			cars[shaft] = new Car(p, 25.0f, 25.0f, shaft);
+			cars[shaft] = new Car(p, 25.0f, 25.0f, 50.0f, shaft);
 			cars[shaft].createPath(shaftPoints);
 		}
 		

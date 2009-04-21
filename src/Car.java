@@ -6,6 +6,7 @@ public class Car implements Drawable {
 	float y;
 	float width;
 	float height;
+	float depth;
 	int people;
 	boolean goingUp;
 	Button[] floorButtons;
@@ -14,19 +15,69 @@ public class Car implements Drawable {
 	int floor;
 	Point2d[] path;
 	
-	public Car(PApplet p, float width, float height, int shaft) {
+	public Car(PApplet p, float width, float height, float depth, int shaft) {
 		this.p = p;
 		this.width = width;
 		this.height = height;
+		this.depth = depth;
 		this.shaft = shaft;
 	}
 	
 	
 	public void draw() {
 //		System.out.println("in car draw");
-		p.rectMode(p.CENTER);
+		//p.rectMode(p.CENTER);
 		p.fill(25,45, 255);
-		p.rect(x, y, width, height);
+		//p.rect(x, y, width, height);
+		p.pushMatrix();
+		p.translate(x, y);
+		p.stroke(120);
+		p.beginShape(p.QUADS);
+			
+			// left side
+			p.fill(20);
+			p.vertex(-width/2, -height/2, -1);
+			p.fill(0);
+			p.vertex(-width/2, -height/2, -depth/2);
+			p.vertex(-width/2, height/2, -depth/2);
+			p.fill(20);
+			p.vertex(-width/2, height/2, -1);
+			
+			// back side
+			p.fill(0);
+			p.vertex(-width/2, -height/2, -depth/2);
+			p.vertex(width/2, -height/2, -depth/2);
+			p.vertex(width/2, height/2, -depth/2);
+			p.vertex(-width/2, height/2, -depth/2);
+			
+			// right side
+			p.fill(0);
+			p.vertex(width/2, -height/2, -depth/2);
+			p.fill(20);
+			p.vertex(width/2, -height/2, -1);
+			p.vertex(width/2, height/2, -1);
+			p.fill(0);
+			p.vertex(width/2, height/2, -depth/2);
+
+			// bottom
+			p.fill(20, 0, 0);		// red carpet
+			p.vertex(-width/2, height/2, -depth/2);
+			p.vertex(width/2, height/2, -depth/2);
+			p.fill(220, 40, 20);		// red carpet
+			p.vertex(width/2, height/2, -1);
+			p.vertex(-width/2, height/2, -1);
+
+			// top
+			p.fill(255, 255, 255, 50);		// yellow lights?
+			p.vertex(-width/2, -height/2, -depth/2);
+			p.vertex(width/2, -height/2, -depth/2);
+			p.vertex(width/2, -height/2, -1);
+			p.vertex(-width/2, -height/2, -1);
+
+			
+			
+		p.endShape();
+		p.popMatrix();
 	}
 	
 	public void update() {
@@ -86,6 +137,12 @@ public class Car implements Drawable {
 		// set initial x,y to lowest point in path, should be bottom floor.
 		this.x = path[shaftPoints.length - 1].x;
 		this.y = path[shaftPoints.length - 1].y;
+	}
+
+
+	public void operate() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
