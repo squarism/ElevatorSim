@@ -11,22 +11,28 @@ public class ElevatorSim extends PApplet {
 	Building building;
 	Door door;
 
-	
 	int now;
 	int then;
 	float fps;
 
 	public void setup() {
-		size(700, 300);
+		size(400, 200, P3D);
+		noSmooth();
 		pixelFont = loadFont("Monaco-9.vlw");
 		textFont(pixelFont);
 
-		building = new Building(this, 3, 2);		
-		
-		for (int i=0; i < building.doors.length; i++) {
-			AnimationManager.getInstance().add(building.doors[i]);
+		building = new Building(this, 3, 2);
+
+		for (int i = 0; i < building.doors.length; i++) {
+			for (int j=0; j < building.doors[i].length; j++) {
+				AnimationManager.getInstance().add(building.doors[i][j]);	
+			}
 		}
-		
+
+		for (int i = 0; i < building.cars.length; i++) {
+			AnimationManager.getInstance().add(building.cars[i]);
+		}
+
 	}
 
 	public void draw() {
@@ -58,16 +64,16 @@ public class ElevatorSim extends PApplet {
 		ArrayList drawables = AnimationManager.getInstance().drawables;
 		for (Iterator iterator = drawables.iterator(); iterator.hasNext();) {
 			Drawable d = (Drawable) iterator.next();
-			//System.out.println(d.isDone());
+			// System.out.println(d.isDone());
 			if (d.isDone()) {
-				//drawables.remove(d);
+				// drawables.remove(d);
 				toRemove.add(d);
 			} else {
 				d.update(elapsed);
 				d.draw();
 			}
 		}
-		
+
 		for (Iterator iterator = toRemove.iterator(); iterator.hasNext();) {
 			Drawable removeMe = (Drawable) iterator.next();
 			drawables.remove(removeMe);
@@ -76,10 +82,25 @@ public class ElevatorSim extends PApplet {
 	}
 
 	public void keyPressed() {
-		if (key == ' ') {
-			for(int i=0; i < building.doors.length; i++) {
-				Door door = building.doors[i];
-				door.operateDoors();
+		// if (key == ' ') {
+		// for(int i=0; i < building.doors.length; i++) {
+		// Door door = building.doors[i];
+		// door.operateDoors();
+		// }
+		// }
+	}
+
+	public void mousePressed() {
+		for (int i = 0; i < building.doors.length; i++) {
+			for (int j = 0; j < building.doors[i].length; j++) {
+				Door door = building.doors[i][j];
+				float dl = door.x - door.width / 2;
+				float dr = door.x + door.width / 2;
+				float du = door.y - door.height / 2;
+				float db = door.y + door.height / 2;
+				if (dl < mouseX && mouseX < dr && du < mouseY && mouseY < db) {
+					door.operate();
+				}
 			}
 		}
 	}

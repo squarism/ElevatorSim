@@ -37,7 +37,6 @@ public class DoorAnimation extends Animation implements Runnable {
 	public DoorAnimation(PApplet p, int x, int y, int w, int h, int direction) {
 		this.p = p;
 		p.registerDispose(this);
-		p.println("x"+x + "w" +w);
 
 		this.level = w;
 		this.levelBase = this.level;

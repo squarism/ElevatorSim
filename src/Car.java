@@ -1,3 +1,5 @@
+import processing.core.PApplet;
+
 public class Car implements Drawable {
 	
 	float x;
@@ -7,13 +9,24 @@ public class Car implements Drawable {
 	int people;
 	boolean goingUp;
 	Button[] floorButtons;
+	private PApplet p;
+	int shaft;
+	int floor;
+	Point2d[] path;
 	
-	public void init() {
-		
+	public Car(PApplet p, float width, float height, int shaft) {
+		this.p = p;
+		this.width = width;
+		this.height = height;
+		this.shaft = shaft;
 	}
 	
+	
 	public void draw() {
-		
+//		System.out.println("in car draw");
+		p.rectMode(p.CENTER);
+		p.fill(25,45, 255);
+		p.rect(x, y, width, height);
 	}
 	
 	public void update() {
@@ -56,6 +69,23 @@ public class Car implements Drawable {
 	public void update(float elapsed) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	public void createPath(Point2d[][] shaftPoints) {
+		path = new Point2d[shaftPoints.length];
+		
+		for (int floor=0; floor < shaftPoints.length; floor++) {
+			for (int shaft=0; shaft < shaftPoints[floor].length; shaft++) {
+				if (this.shaft == shaft) {
+					path[floor] = shaftPoints[floor][shaft];
+				}		
+			}
+		}
+		
+		// set initial x,y to lowest point in path, should be bottom floor.
+		this.x = path[shaftPoints.length - 1].x;
+		this.y = path[shaftPoints.length - 1].y;
 	}
 
 }
