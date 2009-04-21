@@ -80,6 +80,7 @@ public class DoorAnimation extends Animation implements Runnable {
 		
 		// not absolute, used for both doors, offset of sorts
 		
+		// TODO: MOVE TO UPDATE FOO!
 		float leftDoorEdge;
 		float rightDoorEdge;
 		if(direction == 0) {
@@ -138,7 +139,7 @@ public class DoorAnimation extends Animation implements Runnable {
 	}
 
 	public void update(float elapsed) {
-		// println("update() elapsed:" + elapsed + " level:" + level);
+		// System.out.println("update() elapsed:" + elapsed + " level:" + level);
 		this.elapsed = elapsed;
 	}
 

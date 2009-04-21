@@ -25,13 +25,13 @@ public class ElevatorSim extends PApplet {
 		// add elevator doors on every floor across every shaft to drawlist
 		for (int i = 0; i < building.doors.length; i++) {
 			for (int j=0; j < building.doors[i].length; j++) {
-				DrawingManager.getInstance().add(building.doors[i][j]);	
+				DrawingManager.getInstance().addGameObject(building.doors[i][j]);	
 			}
 		}
 
 		// add cars to drawlist
 		for (int i = 0; i < building.cars.length; i++) {
-			DrawingManager.getInstance().add(building.cars[i]);
+			DrawingManager.getInstance().addGameObject(building.cars[i]);
 		}
 
 	}
@@ -61,30 +61,38 @@ public class ElevatorSim extends PApplet {
 			elapsed = (float) (1.0 / 12.0);
 
 		ArrayList toRemove = new ArrayList();
-		ArrayList drawables = DrawingManager.getInstance().gameObjects;
-		for (Iterator iterator = drawables.iterator(); iterator.hasNext();) {
-			Drawable d = (Drawable) iterator.next();
-			// System.out.println(d.isDone());
-			if (d.isDone()) {
+		ArrayList animationObjects = DrawingManager.getInstance().animationObjects;
+		for (Iterator iterator = animationObjects.iterator(); iterator.hasNext();) {
+			Animation animation = (Animation) iterator.next();
+			// System.out.println(animation.isDone());
+			if (animation.isDone()) {
 				// drawables.remove(d);
-				toRemove.add(d);
+				toRemove.add(animation);
 			} else {
-				d.update(elapsed);
-				d.draw();
+				animation.update(elapsed);
+				animation.draw();
 			}
 		}
-
+		
 		for (Iterator iterator = toRemove.iterator(); iterator.hasNext();) {
-			Drawable removeMe = (Drawable) iterator.next();
-			drawables.remove(removeMe);
+			Animation removeMe = (Animation) iterator.next();
+			animationObjects.remove(removeMe);
 		}
+		
+		ArrayList gameObjects = DrawingManager.getInstance().gameObjects;
+		for (Iterator iterator = gameObjects.iterator(); iterator.hasNext();) {
+			Drawable drawable = (Drawable) iterator.next();
+			drawable.update(elapsed);
+			drawable.draw();
+		}
+
 
 	}
 
 	public void keyPressed() {
 		 if (key == ' ') {
 			 for(int i=0; i < building.cars.length; i++) {
-				 Car car = building.cars[i];
+				 Car car = building.cars[0];
 				 car.operate();
 			 }
 		 }
@@ -100,6 +108,7 @@ public class ElevatorSim extends PApplet {
 				float db = door.y + door.height / 2;
 				if (dl < mouseX && mouseX < dr && du < mouseY && mouseY < db) {
 					door.operate();
+					//building.cars[0].setDestinationFloor(door.floor);
 				}
 			}
 		}

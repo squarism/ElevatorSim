@@ -1,4 +1,4 @@
-public class Animation implements Drawable {
+public class Animation {
 	
 	boolean started;
 	boolean done;

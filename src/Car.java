@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+
+import megamu.shapetween.Shaper;
+import megamu.shapetween.Tween;
 import processing.core.PApplet;
 
 public class Car implements Drawable {
@@ -13,7 +17,11 @@ public class Car implements Drawable {
 	private PApplet p;
 	int shaft;
 	int floor;
+	int destinationFloor;
 	Point2d[] path;
+	Tween ani;
+	ArrayList floorQueue = new ArrayList();
+	private boolean done;
 	
 	public Car(PApplet p, float width, float height, float depth, int shaft) {
 		this.p = p;
@@ -74,28 +82,19 @@ public class Car implements Drawable {
 			p.vertex(width/2, -height/2, -1);
 			p.vertex(-width/2, -height/2, -1);
 
-			
-			
 		p.endShape();
 		p.popMatrix();
 	}
 	
-	public void update() {
-		
+	public void setDestinationFloor(int destinationFloor) {
+		this.destinationFloor = destinationFloor;
+		System.out.println(floorQueue);
+		if (! floorQueue.contains(destinationFloor)) {
+			floorQueue.add(destinationFloor);
+		}
+		operate();
 	}
-	
-	public void moveToFloor(int floor) {
 		
-	}
-	
-	public void openDoor() {
-		
-	}
-	
-	public void closeDoor() {
-		
-	}
-	
 	public boolean isFull() {
 		return true;
 	}
@@ -112,13 +111,26 @@ public class Car implements Drawable {
 		
 	}
 
+	// is the car done moving?
 	public boolean isDone() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public void update(float elapsed) {
-		// TODO Auto-generated method stub
+		
+		if (ani != null) {
+			//System.out.println(ani.time());
+		}
+		
+		if (ani != null && ani.isTweening()) {
+			int destinationFloor = ((Integer)floorQueue.get(0)).intValue();
+			y = p.lerp(y, path[destinationFloor].y, ani.position());
+		} 
+		if (ani != null && ani.time() == 1) {
+			done = true;
+			System.out.println("DONE!" + floorQueue.indexOf(destinationFloor));
+			//floorQueue.remove(0);
+		}
 		
 	}
 
@@ -135,14 +147,17 @@ public class Car implements Drawable {
 		}
 		
 		// set initial x,y to lowest point in path, should be bottom floor.
-		this.x = path[shaftPoints.length - 1].x;
-		this.y = path[shaftPoints.length - 1].y;
+		//this.x = path[shaftPoints.length - 1].x;
+		//this.y = path[shaftPoints.length - 1].y;
+		this.x = path[0].x;
+		this.y = path[0].y;
+
 	}
 
 
 	public void operate() {
-		// TODO Auto-generated method stub
-		
+		done = false;
+		ani = new Tween(p, 1, Tween.SECONDS, Shaper.COSINE);
 	}
 
 }

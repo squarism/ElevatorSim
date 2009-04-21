@@ -31,8 +31,8 @@ public class Building {
 		
 		for (int floor=0; floor < floors; floor++) {
 			for (int shaft=0; shaft < shafts; shaft++) {
-				shaftPoints[floor][shaft] = new Point2d((shaft + 1) * xSpacing, (floor + 1) * ySpacing);
-				Door door = new Door(p, shaftPoints[floor][shaft].x, shaftPoints[floor][shaft].y, doorHeight, doorWidth);
+				shaftPoints[floor][shaft] = new Point2d((shaft + 1) * xSpacing, (floors - floor) * ySpacing);
+				Door door = new Door(p, shaftPoints[floor][shaft].x, shaftPoints[floor][shaft].y, doorHeight, doorWidth, floor, shaft);
 				doors[floor][shaft] = door;
 			}
 		}

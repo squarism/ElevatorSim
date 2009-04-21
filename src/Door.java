@@ -9,6 +9,8 @@ public class Door implements Drawable {
 	float height;
 	float width;
 	DoorAnimation doorAnimation;
+	int floor;
+	int shaft;
 	
 	final static String CLOSING = "CLOSING";
 	final static String OPENING = "OPENING";
@@ -47,12 +49,14 @@ public class Door implements Drawable {
 		this.width = width;
 	}
 
-	public Door(PApplet p, float x, float y, float width, float height) {
+	public Door(PApplet p, float x, float y, float width, float height, int floor, int shaft) {
 		this.p = p;
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		this.floor = floor;
+		this.shaft = shaft;
 		state = CLOSED;
 		
 		// this is a dummy thing because initial state is closed
@@ -78,7 +82,7 @@ public class Door implements Drawable {
 		p.endShape();
 		p.popMatrix();
 
-		Util.nesText(p, x, y - 20, state);
+		Util.nesText(p, x, y - 20, state + " floor:" + floor);
 
 		// only draw static door if door is closed and animation is done 
 		if (!state.equals(OPENED) && doorAnimation.isDone()) {
@@ -102,7 +106,7 @@ public class Door implements Drawable {
 					(int) height, 0);
 		}
 		doorAnimation.start();
-		DrawingManager.getInstance().add(doorAnimation);
+		DrawingManager.getInstance().addAnimation(doorAnimation);
 	}
 
 	public boolean isDone() {
