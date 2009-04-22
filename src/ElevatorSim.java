@@ -24,9 +24,14 @@ public class ElevatorSim extends PApplet {
 
 		// add elevator doors on every floor across every shaft to drawlist
 		for (int i = 0; i < building.doors.length; i++) {
-			for (int j=0; j < building.doors[i].length; j++) {
-				DrawingManager.getInstance().addGameObject(building.doors[i][j]);	
+
+			for (int j = 0; j < building.doors[i].length; j++) {
+
+				DrawingManager.getInstance()
+						.addGameObject(building.doors[i][j]);
+
 			}
+
 		}
 
 		// add cars to drawlist
@@ -34,6 +39,11 @@ public class ElevatorSim extends PApplet {
 			DrawingManager.getInstance().addGameObject(building.cars[i]);
 		}
 
+	}
+	
+	public void update() {
+		building.update();
+		//building.doDoors();
 	}
 
 	public void draw() {
@@ -54,16 +64,21 @@ public class ElevatorSim extends PApplet {
 		// compute frames per second by averaging over the past + current
 		fps = (float) (.95 * fps + .05 / elapsed);
 
-		// slow the game down if the computer can't keep up a reasonable frame
-		// rate
+		// slow down if the computer can't keep up a reasonable framerate
 		// by limiting the elapsed time to 1/12th of a second (12fps)
-		if (elapsed > 1.0 / 12.0)
+		if (elapsed > 1.0 / 12.0) {
 			elapsed = (float) (1.0 / 12.0);
+		}
 
+		// this update
+		update();
+		
 		ArrayList toRemove = new ArrayList();
-		ArrayList animationObjects = DrawingManager.getInstance().animationObjects;
-		for (Iterator iterator = animationObjects.iterator(); iterator.hasNext();) {
+		ArrayList anim = DrawingManager.getInstance().animationObjects;
+		for (Iterator iterator = anim.iterator(); iterator.hasNext();) {
+
 			Animation animation = (Animation) iterator.next();
+
 			// System.out.println(animation.isDone());
 			if (animation.isDone()) {
 				// drawables.remove(d);
@@ -72,45 +87,55 @@ public class ElevatorSim extends PApplet {
 				animation.update(elapsed);
 				animation.draw();
 			}
+
 		}
-		
+
 		for (Iterator iterator = toRemove.iterator(); iterator.hasNext();) {
 			Animation removeMe = (Animation) iterator.next();
-			animationObjects.remove(removeMe);
+			anim.remove(removeMe);
 		}
-		
+
 		ArrayList gameObjects = DrawingManager.getInstance().gameObjects;
 		for (Iterator iterator = gameObjects.iterator(); iterator.hasNext();) {
+			
 			Drawable drawable = (Drawable) iterator.next();
 			drawable.update(elapsed);
 			drawable.draw();
+		
 		}
-
-
 	}
 
 	public void keyPressed() {
-		 if (key == ' ') {
-			 for(int i=0; i < building.cars.length; i++) {
-				 Car car = building.cars[0];
-				 car.operate();
-			 }
-		 }
+		if (key == ' ') {
+			for (int i = 0; i < building.cars.length; i++) {
+				Car car = building.cars[0];
+				car.operate();
+			}
+		}
 	}
 
 	public void mousePressed() {
 		for (int i = 0; i < building.doors.length; i++) {
+
 			for (int j = 0; j < building.doors[i].length; j++) {
+
 				Door door = building.doors[i][j];
 				float dl = door.x - door.width / 2;
 				float dr = door.x + door.width / 2;
 				float du = door.y - door.height / 2;
 				float db = door.y + door.height / 2;
+
 				if (dl < mouseX && mouseX < dr && du < mouseY && mouseY < db) {
-					door.operate();
+					System.out.println("SETTING SFDOIHJSFO");
+					
+					//door.operate();
+					building.callCar(0, door.floor);
 					//building.cars[0].setDestinationFloor(door.floor);
+					//building.cars[0].operate();
 				}
+
 			}
+
 		}
 	}
 
@@ -121,5 +146,6 @@ public class ElevatorSim extends PApplet {
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "ElevatorSim" });
 	}
+
 
 }

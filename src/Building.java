@@ -38,10 +38,11 @@ public class Building {
 		}
 		
 		for (int shaft=0; shaft < shafts; shaft++) {
-			System.out.println(shaft);
 			cars[shaft] = new Car(p, 25.0f, 25.0f, 50.0f, shaft);
 			cars[shaft].createPath(shaftPoints);
 		}
+		
+		System.out.println("[floor][shaft]:[" + doors.length + "][" + doors[0].length + "]");
 		
 	}
 	// door = new Door(this);
@@ -51,5 +52,73 @@ public class Building {
 	// door.setWidth(50.0f);
 	//
 	// drawables.add(door);
+
+	public void operateDoor(int destinationFloor, int shaft) {
+		for (int i = 0; i < doors.length; i++) {
+
+			for (int j = 0; j < doors[i].length; j++) {
+
+				Door door = doors[i][j];
+				if (door.shaft == shaft && door.floor == destinationFloor) {
+					door.operate();
+				}
+				/*
+				float dl = door.x - door.width / 2;
+				float dr = door.x + door.width / 2;
+				float du = door.y - door.height / 2;
+				float db = door.y + door.height / 2;
+
+				if (dl < mouseX && mouseX < dr && du < mouseY && mouseY < db) {
+					//door.operate();
+					building.cars[0].setDestinationFloor(door.floor);
+				}
+				*/
+
+			}
+
+		}
+
+		
+	}
+
+	/*
+	public void doDoors() {
+		for (int i = 0; i < cars.length; i++) {
+			if (cars[i].destinationFloor == cars[i].floor)
+		}
+		//building.operateDoor(destinationFloor, shaft);
+		
+	}
+	*/
+
+	public void callCar(int shaft, int floor) {
+		cars[shaft].setDestinationFloor(floor);
+		cars[shaft].operate();
+		
+		int closeOnFloor = cars[shaft].floor;
+		
+		if (doors[closeOnFloor][shaft].state == Door.OPENED) {
+			doors[closeOnFloor][shaft].operate();
+		}
+
+		//building.operateDoor(destinationFloor, shaft);
+		
+	}
+
+	public void update() {
+		for (int shaft = 0; shaft < cars.length; shaft++) {
+			if (cars[shaft].arrived) {
+				
+				if (cars[shaft].destinationFloor == cars[shaft].floor) {
+					int currentFloor = cars[shaft].floor;
+					operateDoor(currentFloor, shaft);
+					cars[shaft].setArrived(false);
+				}
+				
+			} else {
+				
+			}
+		}
+	}
 
 }

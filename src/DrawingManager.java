@@ -19,12 +19,12 @@ public class DrawingManager {
 	}
 
 	public void addAnimation(Object o) {
-		System.out.println("ADDED ANIM:" + o);
+		// System.out.println("ADDED ANIM:" + o);
 		animationObjects.add(o);
 	}
 
 	public void addGameObject(Object o) {
-		System.out.println("ADDED GAMEOBJECT:" + o);
+		// System.out.println("ADDED GAMEOBJECT:" + o);
 		gameObjects.add(o);
 	}
 

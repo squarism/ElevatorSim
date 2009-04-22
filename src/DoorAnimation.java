@@ -58,9 +58,6 @@ public class DoorAnimation extends Animation implements Runnable {
 		rightDoor[1] = new Point2d(x+w/2, y-h/2);	// top right
 		rightDoor[2] = new Point2d(x+w/2, y+h/2);	// bottom right
 		rightDoor[3] = new Point2d(x, y+h/2);		// bottom left - moves
-		
-		
-		
 	}
 
 	// draw does not contain the elapsed because it's not the update really
