@@ -14,7 +14,7 @@ public class Car implements Drawable {
 	int people;
 	boolean moving;
 	boolean arrived;
-	Button[] floorButtons;
+	//Button[] floorButtons;
 	private PApplet p;
 	int shaft;
 	int floor;
@@ -22,8 +22,8 @@ public class Car implements Drawable {
 	int leftFloor;
 	Point2d[] path;
 	Tween ani;
-	ArrayList floorQueue = new ArrayList();
-	private boolean done;
+	//ArrayList floorQueue = new ArrayList();
+	//private boolean done;
 
 	public Car(PApplet p, float width, float height, float depth, int shaft) {
 		this.p = p;
@@ -89,7 +89,7 @@ public class Car implements Drawable {
 
 	public void setDestinationFloor(int destinationFloor) {
 		this.destinationFloor = destinationFloor;
-		System.out.println(floorQueue);
+		// System.out.println(floorQueue);
 		//if (!floorQueue.contains(destinationFloor)) {
 			//floorQueue.add(destinationFloor);
 		//}
@@ -129,6 +129,7 @@ public class Car implements Drawable {
 			y = p.lerp(y, path[this.destinationFloor].y, ani.position());
 		}
 		if (ani != null && ani.time() == 1) {
+			// System.out.println("I think we're here!");
 			ani = null;
 			moving = false;
 			arrived = true;
@@ -160,6 +161,7 @@ public class Car implements Drawable {
 
 	public void operate() {
 		//leftFloor = floor;
+		// System.out.println("I think we're moving!");
 		moving = true;
 		ani = new Tween(p, 1, Tween.SECONDS, Shaper.COSINE);
 	}

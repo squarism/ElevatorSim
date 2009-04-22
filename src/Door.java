@@ -15,7 +15,7 @@ public class Door implements Drawable {
 	final static String CLOSING = "CLOSING";
 	final static String OPENING = "OPENING";
 	final static String CLOSED = "CLOSED";
-	final static String OPENED = "OPENED";
+	final static String OPEN = "OPEN";
 	
 	public float getX() {
 		return x;
@@ -85,20 +85,23 @@ public class Door implements Drawable {
 		Util.nesText(p, x, y - 20, state + " floor:" + floor);
 
 		// only draw static door if door is closed and animation is done 
-		if (!state.equals(OPENED) && doorAnimation.isDone()) {
+		if (!state.equals(OPEN) && doorAnimation.isDone()) {
 			p.fill(255);
 			p.stroke(0);
+			
 			// left door
 			p.rect(x - width / 2, y - height / 2, width / 2, height);
+			
 			// right door
 			p.rect(x, y - height / 2, width / 2, height);
+			
 			p.stroke(120, 0, 0);
 			p.line(x, y - height / 2, x, y + height / 2);
 		}
 	}
 
 	public void operate() {
-		if (state.equals(OPENED)) {
+		if (state.equals(OPEN)) {
 			doorAnimation = new DoorAnimation(p, (int) x, (int) y, (int) width,
 					(int) height, 1);
 		} else {
@@ -116,16 +119,24 @@ public class Door implements Drawable {
 	public void update(float elapsed) {
 		if (state.equals(CLOSED) && doorAnimation.isStarted() && !doorAnimation.isDone()) {
 			state = this.OPENING;
-		} else if (state.equals(OPENED) && doorAnimation.isStarted() && !doorAnimation.isDone()) {
+		} else if (state.equals(OPEN) && doorAnimation.isStarted() && !doorAnimation.isDone()) {
 			state = this.CLOSING;
 		} else if (doorAnimation.isStarted() == false && doorAnimation.isDone()
 				&& doorAnimation.direction == 1) {
 			state = this.CLOSED;
 		} else if (doorAnimation.isStarted() == false && doorAnimation.isDone()
 				&& doorAnimation.direction == 0) {
-			state = this.OPENED;
+			state = this.OPEN;
 		}
 
+	}
+
+	public boolean isReady() {
+		if (state.equals(CLOSING) || state.equals(OPENING) || state.equals(OPEN)) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 }

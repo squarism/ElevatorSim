@@ -13,12 +13,16 @@ public class ElevatorSim extends PApplet {
 	int now;
 	int then;
 	float fps;
+	
+	String message = new String("DEBUG");
 
 	public void setup() {
 		size(400, 200, P3D);
 		noSmooth();
 		pixelFont = loadFont("Monaco-9.vlw");
-		textFont(pixelFont);
+		textFont(pixelFont,12);
+		
+		ortho(-width/2, width/2, -height/2, height/2, -100, 100);
 
 		building = new Building(this, 3, 2);
 
@@ -40,14 +44,22 @@ public class ElevatorSim extends PApplet {
 		}
 
 	}
-	
+
 	public void update() {
 		building.update();
-		//building.doDoors();
+		// building.doDoors();
 	}
 
 	public void draw() {
 		background(20, 50, 150); // nice blue bg
+		
+		//translate(-width/2, height/4, 0);
+		translate(0, height/4, 0);
+		rotateX(-PI/6); 
+		rotateY(PI/6);
+		
+		//text("DEBUG: " + message, 0,11);
+
 
 		// note how much time has passed since our last loop
 		then = now;
@@ -72,7 +84,7 @@ public class ElevatorSim extends PApplet {
 
 		// this update
 		update();
-		
+
 		ArrayList toRemove = new ArrayList();
 		ArrayList anim = DrawingManager.getInstance().animationObjects;
 		for (Iterator iterator = anim.iterator(); iterator.hasNext();) {
@@ -97,21 +109,33 @@ public class ElevatorSim extends PApplet {
 
 		ArrayList gameObjects = DrawingManager.getInstance().gameObjects;
 		for (Iterator iterator = gameObjects.iterator(); iterator.hasNext();) {
-			
+
 			Drawable drawable = (Drawable) iterator.next();
 			drawable.update(elapsed);
 			drawable.draw();
-		
+
 		}
 	}
 
 	public void keyPressed() {
 		if (key == ' ') {
-			for (int i = 0; i < building.cars.length; i++) {
-				Car car = building.cars[0];
-				car.operate();
+			for (int i = 0; i < building.doors.length; i++) {
+
+				for (int j = 0; j < building.doors[i].length; j++) {
+					Door door = building.doors[i][j];
+					door.operate();
+				}
+				
 			}
 		}
+		
+		if (key == '1') building.callCar(0,0);
+		if (key == '2') building.callCar(0,1);
+		if (key == '3') building.callCar(0,2);
+		if (key == '4')	building.callCar(1,0);
+		if (key == '5') building.callCar(1,1);
+		if (key == '6') building.callCar(1,2);
+		
 	}
 
 	public void mousePressed() {
@@ -127,11 +151,11 @@ public class ElevatorSim extends PApplet {
 
 				if (dl < mouseX && mouseX < dr && du < mouseY && mouseY < db) {
 					System.out.println("SETTING SFDOIHJSFO");
-					
-					//door.operate();
+
+					// door.operate();
 					building.callCar(0, door.floor);
-					//building.cars[0].setDestinationFloor(door.floor);
-					//building.cars[0].operate();
+					// building.cars[0].setDestinationFloor(door.floor);
+					// building.cars[0].operate();
 				}
 
 			}
@@ -146,6 +170,5 @@ public class ElevatorSim extends PApplet {
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "ElevatorSim" });
 	}
-
 
 }

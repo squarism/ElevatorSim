@@ -92,26 +92,59 @@ public class Building {
 	*/
 
 	public void callCar(int shaft, int floor) {
-		cars[shaft].setDestinationFloor(floor);
-		cars[shaft].operate();
 		
-		int closeOnFloor = cars[shaft].floor;
+		// if we're on that floor, we don't need to do anything
+		// TODO: maybe open doors.
+		if (cars[shaft].floor != floor) {
 		
-		if (doors[closeOnFloor][shaft].state == Door.OPENED) {
-			doors[closeOnFloor][shaft].operate();
+			cars[shaft].setDestinationFloor(floor);
+			System.out.println("SET DEST" + floor);
+			//cars[shaft].operate();
+			
+			int closeOnFloor = cars[shaft].floor;
+			
+			// close previous floor's door
+			if (doors[closeOnFloor][shaft].state == Door.OPEN) {
+				doors[closeOnFloor][shaft].operate();
+			}
+	
+			//building.operateDoor(destinationFloor, shaft);
+		
 		}
-
-		//building.operateDoor(destinationFloor, shaft);
 		
 	}
 
 	public void update() {
 		for (int shaft = 0; shaft < cars.length; shaft++) {
-			if (cars[shaft].arrived) {
+			
+			// we need to go somewhere
+			if (cars[shaft].destinationFloor != cars[shaft].floor && !cars[shaft].isMoving()) {
 				
+				// System.out.println("WE NEED TO GO SOMEWHERE ON SHAFT" + shaft);
+				
+				int floor = cars[shaft].floor;
+				
+				if (doors[floor][shaft].isReady()) {
+					System.out.println("so operate:" + shaft);
+					cars[shaft].operate();
+				}
+				
+			}
+			
+			
+			
+			if (cars[shaft].arrived) {
+				System.out.println("WE'RE HERE!");
 				if (cars[shaft].destinationFloor == cars[shaft].floor) {
 					int currentFloor = cars[shaft].floor;
-					operateDoor(currentFloor, shaft);
+					
+					// open door, we're arrived
+					if (doors[currentFloor][shaft].state == Door.CLOSED) {
+						doors[currentFloor][shaft].operate();
+					}
+
+					
+					//operateDoor(currentFloor, shaft);
 					cars[shaft].setArrived(false);
 				}
 				
