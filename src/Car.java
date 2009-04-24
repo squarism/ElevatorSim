@@ -19,11 +19,13 @@ public class Car implements Drawable {
 	int shaft;
 	int floor;
 	int destinationFloor;
-	int leftFloor;
+	int previousFloor;
 	Point2d[] path;
 	Tween ani;
 	//ArrayList floorQueue = new ArrayList();
 	//private boolean done;
+	
+	int carSpeed = 2;
 
 	public Car(PApplet p, float width, float height, float depth, int shaft) {
 		this.p = p;
@@ -126,7 +128,12 @@ public class Car implements Drawable {
 		//if (ani != null && ani.isTweening()) {
 		if (moving == true) {
 			//int destinationFloor = ((Integer) floorQueue.get(0)).intValue();
-			y = p.lerp(y, path[this.destinationFloor].y, ani.position());
+			
+			float p = path[this.previousFloor].y;
+			
+			// y = p.lerp(y, path[this.destinationFloor].y, ani.position());
+			y = p + ani.position() * (path[this.destinationFloor].y - p);
+			//y = previousPoint().y + ( ani.position() * (points[currentPoint].y - previousPoint().y));
 		}
 		if (ani != null && ani.time() == 1) {
 			// System.out.println("I think we're here!");
@@ -160,10 +167,11 @@ public class Car implements Drawable {
 	}
 
 	public void operate() {
-		//leftFloor = floor;
+		previousFloor = floor;
+		int distance = p.abs(previousFloor - destinationFloor);
 		// System.out.println("I think we're moving!");
 		moving = true;
-		ani = new Tween(p, 1, Tween.SECONDS, Shaper.COSINE);
+		ani = new Tween(p, carSpeed * distance, Tween.SECONDS, Shaper.COSINE);
 	}
 
 	public void setArrived(boolean arrived) {

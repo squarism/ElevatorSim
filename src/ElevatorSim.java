@@ -57,8 +57,8 @@ public class ElevatorSim extends PApplet {
 		//translate(-width/2, height/4, 0);
 
 		//translate(0, -height/4, 0);
-		//rotateX(-PI/6); 
-		//rotateY(PI/6);
+		rotateX(-PI/18); 
+		rotateY(PI/6);
 
 		
 
