@@ -52,11 +52,90 @@ public class ElevatorSim extends PApplet {
 
 	public void draw() {
 		background(20, 50, 150); // nice blue bg
+		lights();
 		
 		//translate(-width/2, height/4, 0);
-		translate(0, height/4, 0);
-		rotateX(-PI/6); 
-		rotateY(PI/6);
+
+		//translate(0, -height/4, 0);
+		//rotateX(-PI/6); 
+		//rotateY(PI/6);
+
+		
+
+		//translate(width/2, 0, 0);
+		  // Orange point light on the right
+		  pointLight(150, 100, 0, // Color
+		             200, -150, 0); // Position
+
+		  // Blue directional light from the left
+		  directionalLight(0, 102, 255, // Color
+		                   width/2, height/2, 0); // The x-, y-, z-axis direction
+
+		  // Yellow spotlight from the front
+		  spotLight(255.0f, 255.0f, 109.0f, // Color
+		            0.0f, 40.0f, 200.0f, // Position
+		            0.0f, -0.5f, -0.5f, // Direction
+		            PI / 2, 2); // Angle, concentration
+		
+		// draw floors
+
+		float dh = building.doorHeight / 2;
+		float dw = building.doorWidth / 2;
+
+		Point2d[] bottomFloorPoints = building.shaftPoints[0];
+		Point2d[] topFloorPoints = building.shaftPoints[building.shaftPoints.length - 1];
+		float bottomFloorY = bottomFloorPoints[0].y + building.doorHeight / 2;
+		float topFloorY = topFloorPoints[0].y - building.doorHeight / 2;
+		
+		
+		for (int floors=0; floors < building.floors; floors++) {
+			fill(120 * floors,255,255, 45);
+			beginShape(QUADS);
+			Point2d[] floorPoints = building.shaftPoints[floors];
+			float floorY = floorPoints[0].y;
+			
+			
+			vertex(0, floorY + building.doorHeight/2, -100);
+			vertex(width, floorY + building.doorHeight/2, -100);
+			vertex(width, floorY + building.doorHeight/2, 100);
+			vertex(0, floorY + building.doorHeight/2, 100);
+
+			endShape();
+		}
+		
+		for (int shafts=0; shafts < building.shafts; shafts++) {
+			
+			// left wall
+			beginShape(QUADS);
+			Point2d[] shaftPoints = building.shaftPoints[shafts];
+			float shaftX = shaftPoints[shafts].x;				
+			vertex(shaftX - dw, topFloorY, -dw * 2);
+			vertex(shaftX - dw, topFloorY, 0);
+			vertex(shaftX - dw, bottomFloorY, 0);
+			vertex(shaftX - dw, bottomFloorY, -dw * 2);
+			endShape();
+
+			// right wall
+			beginShape(QUADS);
+			vertex(shaftX + dw, topFloorY, -dw * 2);
+			vertex(shaftX + dw, topFloorY, 0);
+			vertex(shaftX + dw, bottomFloorY, 0);
+			vertex(shaftX + dw, bottomFloorY, -dw * 2);
+			endShape();
+			
+			// back wall
+			beginShape(QUADS);
+			vertex(shaftX - dw, topFloorY, -dw * 2);
+			vertex(shaftX + dw, topFloorY, -dw * 2);
+			vertex(shaftX + dw, bottomFloorY, -dw * 2);
+			vertex(shaftX - dw, bottomFloorY, -dw * 2);
+			endShape();
+			
+			
+			
+		}
+		
+		
 		
 		//text("DEBUG: " + message, 0,11);
 
@@ -153,9 +232,8 @@ public class ElevatorSim extends PApplet {
 					System.out.println("SETTING SFDOIHJSFO");
 
 					// door.operate();
-					building.callCar(0, door.floor);
-					// building.cars[0].setDestinationFloor(door.floor);
-					// building.cars[0].operate();
+
+					//building.callCar(0, door.floor);
 				}
 
 			}
@@ -165,6 +243,20 @@ public class ElevatorSim extends PApplet {
 
 	public void mouseDragged() {
 		int threshold = (int) map(mouseX, 0, width, 0, 255);
+		
+		if (mousePressed && mouseButton == LEFT) {
+//			rotateX(mouseX);
+//			rotateY(mouseY);
+			//camera(-100, -100, 0, mouseX, mouseY, 0, 0, 0, 0);
+
+//			beginCamera();
+//			camera();
+//			rotateY(mouseY/100);
+//			endCamera();
+			
+//			camera(width/2.0f, height/2.0f, (height/2.0f) / tan(PI*60.0f / 360.0f), width/2.0f, height/2.0f, 0, 0, 1, 0);
+			camera(mouseX, mouseY, (height/2.0f) / tan(PI*60.0f / 360.0f), width/2.0f, height/2.0f, 0, 0, 1, 0);			
+		}
 	}
 
 	public static void main(String args[]) {
