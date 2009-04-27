@@ -3,6 +3,7 @@ import java.util.Iterator;
 
 import processing.core.PApplet;
 import processing.core.PFont;
+import processing.core.PImage;
 
 public class ElevatorSim extends PApplet {
 
@@ -17,31 +18,33 @@ public class ElevatorSim extends PApplet {
 	String message = new String("DEBUG");
 
 	public void setup() {
-		size(400, 200, P3D);
+		size(800, 400, P3D);
 		noSmooth();
 		pixelFont = loadFont("Monaco-9.vlw");
-		textFont(pixelFont,12);
-		
-		ortho(-width/2, width/2, -height/2, height/2, -100, 100);
+		textFont(pixelFont,12);		
+		ortho(-width/2, width/2, -height/2, height/2, -10, 10);
 
+		
 		building = new Building(this, 3, 2);
 
 		// add elevator doors on every floor across every shaft to drawlist
 		for (int i = 0; i < building.doors.length; i++) {
 
 			for (int j = 0; j < building.doors[i].length; j++) {
-
 				DrawingManager.getInstance()
 						.addGameObject(building.doors[i][j]);
-
 			}
-
 		}
 
 		// add cars to drawlist
 		for (int i = 0; i < building.cars.length; i++) {
 			DrawingManager.getInstance().addGameObject(building.cars[i]);
 		}
+		
+		for (int i = 0; i < building.people.length; i++) {
+			DrawingManager.getInstance().addGameObject(building.people[i]);
+		}
+		
 
 	}
 
@@ -54,31 +57,14 @@ public class ElevatorSim extends PApplet {
 		background(20, 50, 150); // nice blue bg
 		lights();
 		
-		//translate(-width/2, height/4, 0);
+
+		translate(width/4, height/4, 0);
 
 		//translate(0, -height/4, 0);
 		rotateX(-PI/18); 
 		rotateY(PI/6);
-
 		
-
-		//translate(width/2, 0, 0);
-		  // Orange point light on the right
-		  pointLight(150, 100, 0, // Color
-		             200, -150, 0); // Position
-
-		  // Blue directional light from the left
-		  directionalLight(0, 102, 255, // Color
-		                   width/2, height/2, 0); // The x-, y-, z-axis direction
-
-		  // Yellow spotlight from the front
-		  spotLight(255.0f, 255.0f, 109.0f, // Color
-		            0.0f, 40.0f, 200.0f, // Position
-		            0.0f, -0.5f, -0.5f, // Direction
-		            PI / 2, 2); // Angle, concentration
-		
-		// draw floors
-
+		/* DRAW FLOORS */
 		float dh = building.doorHeight / 2;
 		float dw = building.doorWidth / 2;
 
@@ -96,13 +82,15 @@ public class ElevatorSim extends PApplet {
 			
 			
 			vertex(0, floorY + building.doorHeight/2, -100);
-			vertex(width, floorY + building.doorHeight/2, -100);
-			vertex(width, floorY + building.doorHeight/2, 100);
+			vertex(building.buildingWidth, floorY + building.doorHeight/2, -100);
+			vertex(building.buildingWidth, floorY + building.doorHeight/2, 100);
 			vertex(0, floorY + building.doorHeight/2, 100);
 
 			endShape();
 		}
 		
+		
+		/* DRAW SHAFT WALLS */
 		for (int shafts=0; shafts < building.shafts; shafts++) {
 			
 			// left wall
@@ -135,9 +123,39 @@ public class ElevatorSim extends PApplet {
 			
 		}
 		
-		
-		
-		//text("DEBUG: " + message, 0,11);
+		// TEMP DRAW PEOPLE PATHS
+		for (int floors=0; floors < building.floors; floors++) {
+			for (int shafts=0; shafts < building.shafts; shafts++) {
+				
+				Point3d start = building.peoplePaths[floors][shafts][0];
+				Point3d wait = building.peoplePaths[floors][shafts][1];
+				Point3d in = building.peoplePaths[floors][shafts][2];
+				
+				pushMatrix();
+				translate(start.x, start.y, start.z);
+				sphere(5);
+				popMatrix();
+				
+				pushMatrix();
+				translate(wait.x, wait.y, wait.z);
+				sphere(5);
+				popMatrix();
+
+				pushMatrix();
+				translate(in.x, in.y, in.z);
+				sphere(5);
+				popMatrix();
+
+				
+
+				
+				
+				line(start.x, start.y, start.z, wait.x, wait.y, wait.z);
+				line(wait.x, wait.y, wait.z, in.x, in.y, in.z);
+					
+				
+			}
+		}
 
 
 		// note how much time has passed since our last loop
@@ -262,5 +280,6 @@ public class ElevatorSim extends PApplet {
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "ElevatorSim" });
 	}
+
 
 }

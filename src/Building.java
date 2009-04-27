@@ -1,5 +1,11 @@
 import processing.core.PApplet;
 
+
+/* Building is brains, not just structure
+ * manages objects inside itself
+ * does not manage game
+ * ElevatorSim main class manages game (as much as possible)
+ */
 public class Building {
 
 	int floors;
@@ -7,11 +13,21 @@ public class Building {
 	PApplet p;
 
 	public Point2d shaftPoints[][];
+	public Point2d spawnPoints[];
+	public Point3d peoplePaths[][][];
+	
 	public Door doors[][];
 	public Car cars[];
+	public Person people[];
+	
+	int buildingWidth = 400;
+	int buildingHeight = 200;
+	
 
 	float doorHeight = 25.0f;
 	float doorWidth = 25.0f;
+	float personHeight = 20.0f;
+	float personWidth = 15.0f;
 
 	public Building(PApplet p, int floors, int shafts) {
 		this.p = p;
@@ -25,10 +41,11 @@ public class Building {
 		doors = new Door[floors][shafts];
 		cars = new Car[shafts];
 		
-		float xSpacing = p.width / (shafts + 1);
-		float ySpacing = p.height / (floors + 1);
 		
+		float xSpacing = buildingWidth / (shafts + 1);
+		float ySpacing = buildingHeight / (floors + 1);
 		
+		/* CREATE STRUCTURE AND DOORS */
 		for (int floor=0; floor < floors; floor++) {
 			for (int shaft=0; shaft < shafts; shaft++) {
 				shaftPoints[floor][shaft] = new Point2d((shaft + 1) * xSpacing, (floors - floor) * ySpacing);
@@ -37,21 +54,93 @@ public class Building {
 			}
 		}
 		
+		/* CREATE CARS */
 		for (int shaft=0; shaft < shafts; shaft++) {
 			cars[shaft] = new Car(p, 25.0f, 25.0f, 50.0f, shaft);
 			cars[shaft].createPath(shaftPoints);
 		}
 		
+		/* CREATE SPAWN POINTS */
+		spawnPoints = new Point2d[floors * shafts];
+
+		int s = 0;
+		for (int floor=0; floor < floors; floor++) {
+//			for (int shaft=0; shaft < shafts; shaft++) {
+	
+				// left/right for spawn point on each side of floor
+
+					spawnPoints[s] = new Point2d(0.0f, (floors - floor) * ySpacing);
+					s++;
+					System.out.println(s);
+
+					spawnPoints[s] = new Point2d(buildingWidth, (floors - floor) * ySpacing);
+					
+
+//			}
+			
+			s++;
+			
+			System.out.println(s);
+		}
+		
+		/* CREATE PATHS */
+		peoplePaths = new Point3d[floors][shafts][3];
+		int sp = 0;
+		for (int floor=0; floor < floors; floor++) {
+			for (int shaft=0; shaft < shafts; shaft++) {
+				
+				// spawn point
+				
+				
+				
+				float x = spawnPoints[sp].x;
+				float y = spawnPoints[sp].y;
+				float z = 0.0f;
+				peoplePaths[floor][shaft][0] = new Point3d(x, y, z);
+				
+//				peoplePaths[floor][shaft][0].x = spawnPoints[sp++].x;
+//				peoplePaths[floor][shaft][0].y = spawnPoints[sp++].y;
+//				peoplePaths[floor][shaft][0].z = 0.0f;
+
+				// in front of elevator
+
+				x = shaftPoints[floor][shaft].x;
+				y = shaftPoints[floor][shaft].y;
+				z = 0.0f;
+				peoplePaths[floor][shaft][1] = new Point3d(x, y, z);
+				
+//				peoplePaths[floor][shaft][1].x = shaftPoints[floor][shaft].x;
+//				peoplePaths[floor][shaft][1].y = shaftPoints[floor][shaft].y;
+//				peoplePaths[floor][shaft][1].z = 0.0f;
+
+				// inside elevator
+				x = shaftPoints[floor][shaft].x;
+				y = shaftPoints[floor][shaft].y;
+				z = -doorWidth;
+				peoplePaths[floor][shaft][2] = new Point3d(x, y, z);
+				
+//				peoplePaths[floor][shaft][2].x = shaftPoints[floor][shaft].x;
+//				peoplePaths[floor][shaft][2].y = shaftPoints[floor][shaft].y;
+//				peoplePaths[floor][shaft][2].z = -doorWidth;
+				
+				
+				sp++;
+				
+			}
+		}
+
+		
+		
+		
+		/* CREATE PEOPLE */
+		people = new Person[2];
+		people[0] = new Man(p, 15.0f, 15.0f, personWidth, personHeight, 1);
+		people[1] = new Man(p, buildingWidth-15.0f, shaftPoints[0][1].y, personWidth, personHeight, 2);
+		
+		
 		System.out.println("[floor][shaft]:[" + doors.length + "][" + doors[0].length + "]");
 		
 	}
-	// door = new Door(this);
-	// door.setX(65.0f);
-	// door.setY(75.0f);
-	// door.setHeight(50.0f);
-	// door.setWidth(50.0f);
-	//
-	// drawables.add(door);
 
 	public void operateDoor(int destinationFloor, int shaft) {
 		for (int i = 0; i < doors.length; i++) {
@@ -115,9 +204,11 @@ public class Building {
 	}
 
 	public void update() {
+		
+		/* UPDATE CARS */
 		for (int shaft = 0; shaft < cars.length; shaft++) {
 			
-			// we need to go somewhere
+			// car needs to go somewhere
 			if (cars[shaft].destinationFloor != cars[shaft].floor && !cars[shaft].isMoving()) {
 				
 				// System.out.println("WE NEED TO GO SOMEWHERE ON SHAFT" + shaft);
@@ -130,9 +221,8 @@ public class Building {
 				}
 				
 			}
-			
-			
-			
+
+			// car has arrived
 			if (cars[shaft].arrived) {
 				System.out.println("WE'RE HERE!");
 				if (cars[shaft].destinationFloor == cars[shaft].floor) {
@@ -143,15 +233,17 @@ public class Building {
 						doors[currentFloor][shaft].operate();
 					}
 
-					
-					//operateDoor(currentFloor, shaft);
 					cars[shaft].setArrived(false);
 				}
 				
-			} else {
-				
 			}
+			
 		}
+		
+		
+		/* UPDATE PEOPLE */
+		
+		
 	}
 
 }
