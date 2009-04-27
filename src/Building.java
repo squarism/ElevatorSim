@@ -90,40 +90,23 @@ public class Building {
 			for (int shaft=0; shaft < shafts; shaft++) {
 				
 				// spawn point
-				
-				
-				
 				float x = spawnPoints[sp].x;
 				float y = spawnPoints[sp].y;
-				float z = 0.0f;
+				float z = doorWidth / 2;
 				peoplePaths[floor][shaft][0] = new Point3d(x, y, z);
 				
-//				peoplePaths[floor][shaft][0].x = spawnPoints[sp++].x;
-//				peoplePaths[floor][shaft][0].y = spawnPoints[sp++].y;
-//				peoplePaths[floor][shaft][0].z = 0.0f;
-
 				// in front of elevator
-
 				x = shaftPoints[floor][shaft].x;
 				y = shaftPoints[floor][shaft].y;
-				z = 0.0f;
+				z = doorWidth / 2;
 				peoplePaths[floor][shaft][1] = new Point3d(x, y, z);
-				
-//				peoplePaths[floor][shaft][1].x = shaftPoints[floor][shaft].x;
-//				peoplePaths[floor][shaft][1].y = shaftPoints[floor][shaft].y;
-//				peoplePaths[floor][shaft][1].z = 0.0f;
 
 				// inside elevator
 				x = shaftPoints[floor][shaft].x;
 				y = shaftPoints[floor][shaft].y;
-				z = -doorWidth;
+				z = -doorWidth / 2;
 				peoplePaths[floor][shaft][2] = new Point3d(x, y, z);
-				
-//				peoplePaths[floor][shaft][2].x = shaftPoints[floor][shaft].x;
-//				peoplePaths[floor][shaft][2].y = shaftPoints[floor][shaft].y;
-//				peoplePaths[floor][shaft][2].z = -doorWidth;
-				
-				
+
 				sp++;
 				
 			}

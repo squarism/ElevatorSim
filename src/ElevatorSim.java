@@ -123,6 +123,8 @@ public class ElevatorSim extends PApplet {
 			
 		}
 		
+		
+		
 		// TEMP DRAW PEOPLE PATHS
 		for (int floors=0; floors < building.floors; floors++) {
 			for (int shafts=0; shafts < building.shafts; shafts++) {
@@ -133,17 +135,18 @@ public class ElevatorSim extends PApplet {
 				
 				pushMatrix();
 				translate(start.x, start.y, start.z);
-				sphere(5);
+				stroke(255);
+				box(15);
 				popMatrix();
 				
 				pushMatrix();
 				translate(wait.x, wait.y, wait.z);
-				sphere(5);
+				box(15);
 				popMatrix();
 
 				pushMatrix();
 				translate(in.x, in.y, in.z);
-				sphere(5);
+				box(15);
 				popMatrix();
 
 				
@@ -156,6 +159,7 @@ public class ElevatorSim extends PApplet {
 				
 			}
 		}
+		
 
 
 		// note how much time has passed since our last loop
