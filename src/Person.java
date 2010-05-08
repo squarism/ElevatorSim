@@ -129,7 +129,7 @@ public class Person implements Drawable {
 		}
 		
 		if (ani != null && ani.time() == 1) {
-			System.out.println("Person:" + id + " thinks they are arrived!");
+			//System.out.println("Person:" + id + " thinks they are arrived!");
 			ani = null;
 			moving = false;
 			arrived = true;

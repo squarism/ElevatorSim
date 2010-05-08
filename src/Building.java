@@ -180,9 +180,15 @@ public class Building {
 			// close previous floor's door
 			if (doors[closeOnFloor][shaft].state == Door.OPEN) {
 				doors[closeOnFloor][shaft].operate();
+			} else {
+				System.out.println("closeOnFloor:" + closeOnFloor);
+				System.out.println("shaft:" + shaft);
+				System.out.println("doors[closeOnFloor][shaft].state:" + doors[closeOnFloor][shaft].state);
+				System.out.println("Door is stuck.");
+				//building.operateDoor(destinationFloor, shaft);
 			}
 	
-			//building.operateDoor(destinationFloor, shaft);
+			
 		
 		}
 		

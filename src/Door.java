@@ -82,7 +82,8 @@ public class Door implements Drawable {
 		p.endShape();
 		p.popMatrix();
 
-		Util.nesText(p, x, y - 20, state + " floor:" + floor);
+		Util.nesText(p, x - 80, y - 20, "State:" + state + " Floor:" + floor);
+		Util.nesText(p, x - 80, y - 40, doorAnimation.isStarted() + " " + doorAnimation.isDone());
 
 		// only draw static door if door is closed and animation is done 
 		if (!state.equals(OPEN) && doorAnimation.isDone()) {
@@ -117,14 +118,18 @@ public class Door implements Drawable {
 	}
 
 	public void update(float elapsed) {
+		
 		if (state.equals(CLOSED) && doorAnimation.isStarted() && !doorAnimation.isDone()) {
 			state = this.OPENING;
-		} else if (state.equals(OPEN) && doorAnimation.isStarted() && !doorAnimation.isDone()) {
+		}
+		if (state.equals(OPEN) && doorAnimation.isStarted() && !doorAnimation.isDone()) {
 			state = this.CLOSING;
-		} else if (doorAnimation.isStarted() == false && doorAnimation.isDone()
+		}
+		if (state == this.CLOSING && doorAnimation.isDone()
 				&& doorAnimation.direction == 1) {
 			state = this.CLOSED;
-		} else if (doorAnimation.isStarted() == false && doorAnimation.isDone()
+		}
+		if (state == this.OPENING && doorAnimation.isDone()
 				&& doorAnimation.direction == 0) {
 			state = this.OPEN;
 		}

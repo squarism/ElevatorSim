@@ -17,6 +17,7 @@ public class DoorAnimation extends Animation implements Runnable {
 	float h;
 	float size;
 
+	// 1 is closing, 0 is opening
 	int direction;
 
 	
@@ -33,6 +34,7 @@ public class DoorAnimation extends Animation implements Runnable {
 	PApplet p;
 	
 	Tween ani;
+	int i = 0; // iterator for modulo hack
 
 	public DoorAnimation(PApplet p, int x, int y, int w, int h, int direction) {
 		this.p = p;
@@ -141,12 +143,12 @@ public class DoorAnimation extends Animation implements Runnable {
 	}
 
 	public void start() {
-		super.done = false;
+		done = false;
 		ani = new Tween(p, 1, Tween.SECONDS, Shaper.COSINE);
 		thread = new Thread(this);
 		// boomCreated();
+		started = true;
 		thread.start();
-		super.started = true;
 	}
 
 	public void run() {
@@ -164,13 +166,30 @@ public class DoorAnimation extends Animation implements Runnable {
 				// do nothing, to the horror of good coding
 			}
 		}*/
+		
+		
+		// OMG hack.  Println affects thread state.
+		
 		while (ani.isTweening()) {
+			i++;
+			
+			// every 1000 frames, sysout to join threads?
+			// if you take this out the animation never finishes, the thread never returns
+			// and the state won't update.
+			// TODO: major bug here, switch to events
+			if (i%10000000 == 0) {
+				//this.wait(0);
+				System.out.print("");
+				started = true;
+				done = false;
+			}
 			
 		}
+		System.out.println("DOOR ANIMATION DONE");
 
 		// while loop finished, level is 0
-		super.done = true;
-		super.started = false;
+		done = true;
+		started = false;
 		// boomDestroyed(id);
 	}
 
