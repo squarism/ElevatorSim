@@ -117,8 +117,10 @@ public class Building {
 		
 		/* CREATE PEOPLE */
 		people = new Person[2];
-		people[0] = new Man(p, 15.0f, 15.0f, personWidth, personHeight, 1);
-		people[1] = new Man(p, buildingWidth-15.0f, shaftPoints[0][1].y, personWidth, personHeight, 2);
+		people[0] = new Person(p, 15.0f, 15.0f, personWidth, personHeight, 1);
+		people[1] = new Person(p, buildingWidth-15.0f, shaftPoints[0][1].y, personWidth, personHeight, 2);
+		people[0].createPath(peoplePaths[2][0], peoplePaths[0][0]);
+		people[1].createPath(peoplePaths[0][1], peoplePaths[1][1]);
 		
 		
 		System.out.println("[floor][shaft]:[" + doors.length + "][" + doors[0].length + "]");
@@ -186,7 +188,7 @@ public class Building {
 		
 	}
 
-	public void update() {
+	public void update(float elapsed) {
 		
 		/* UPDATE CARS */
 		for (int shaft = 0; shaft < cars.length; shaft++) {
@@ -225,6 +227,18 @@ public class Building {
 		
 		
 		/* UPDATE PEOPLE */
+		
+		// start spawned
+		for (int p = 0; p < people.length; p++) {
+			
+			Person peep = people[p];
+			
+			if (peep.state.equals(Person.SPAWNED) && !peep.moving ) {
+				peep.startMoving();
+			} else {
+				peep.update(elapsed);
+			}
+		}
 		
 		
 	}

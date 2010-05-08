@@ -48,8 +48,8 @@ public class ElevatorSim extends PApplet {
 
 	}
 
-	public void update() {
-		building.update();
+	public void update(float elapsed) {
+		building.update(elapsed);
 		// building.doDoors();
 	}
 
@@ -184,7 +184,7 @@ public class ElevatorSim extends PApplet {
 		}
 
 		// this update
-		update();
+		update(elapsed);
 
 		ArrayList toRemove = new ArrayList();
 		ArrayList anim = DrawingManager.getInstance().animationObjects;
